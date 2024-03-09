@@ -1,0 +1,36 @@
+{
+    "name": "arism-sdk",
+    "version": "1.0.1",
+    "description": "",
+    "main": "./index.ts",
+    "types": "./types/index.ts",
+    "files": [
+        "common",
+        "libs",
+        "hellpers",
+        "types"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "tsc"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "BY-NC-ND 4.0",
+    "dependencies": {
+        "@typescript-eslint/eslint-plugin": "^6.19.1",
+        "axios": "^1.6.7",
+        "bn.js": "^5.2.1",
+        "eccrypto": "^1.1.6",
+        "json-stable-stringify": "^1.1.1",
+        "web3": "^4.6.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.11.25",
+        "eslint": "^8",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.1.3",
+        "prettier": "^3.2.5",
+        "typescript": "^5.4.2"
+    }
+}
