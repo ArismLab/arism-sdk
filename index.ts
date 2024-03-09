@@ -1,4 +1,11 @@
-export const Helpers = require('@helpers')
-export const Common = require('@common')
-export const Libs = require('@libs')
-export const Types = require('@types')
+import * as Helpers from './helpers'
+import * as Common from './common'
+import * as Libs from './libs'
+import * as Types from './types'
+
+module.exports = {
+    Helpers,
+    Common,
+    Libs,
+    Types,
+}

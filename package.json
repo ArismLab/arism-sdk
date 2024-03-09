@@ -1,14 +1,13 @@
 {
     "name": "arism-sdk",
-    "version": "1.0.7",
+    "version": "1.0.15",
     "description": "",
     "main": "dist/index.js",
-    "types": "dist/index.d.ts",
     "type": "module",
     "files": [
         "common",
         "libs",
-        "hellpers",
+        "helpers",
         "types"
     ],
     "scripts": {
