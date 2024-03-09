@@ -10,8 +10,8 @@ import type {
     CommitmentResponse,
     GetAddressRequest,
     GetAddressResponse,
-    GetPrivateKeyRequest,
-    GetPrivateKeyResponse,
+    ConstructPrivateKeyRequest,
+    ConstructPrivateKeyResponse,
     Node,
     Point,
     Response,
@@ -96,7 +96,9 @@ export const getAddress = async (
 export const constructPrivateKey = async ({
     idToken,
     owner,
-}: GetPrivateKeyRequest): Promise<Response<GetPrivateKeyResponse>> => {
+}: ConstructPrivateKeyRequest): Promise<
+    Response<ConstructPrivateKeyResponse>
+> => {
     await getAddress({ owner })
 
     const tempPrivateKey = C.generatePrivateKey()

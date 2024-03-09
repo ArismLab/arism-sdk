@@ -18,12 +18,12 @@ export type GetAddressResponse = {
     address: string
 }
 
-export type GetPrivateKeyRequest = {
+export type ConstructPrivateKeyRequest = {
     owner: string
     idToken: string
 }
 
-export type GetPrivateKeyResponse = {
+export type ConstructPrivateKeyResponse = {
     address: string
     privateKey: string
 }

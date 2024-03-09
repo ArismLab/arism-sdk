@@ -1,6 +1,6 @@
 import { toChecksumAddress } from 'web3-utils'
 import * as Crypto from 'eccrypto'
-import { BN, EC, H } from '@common'
+import { BN, EC, H } from '.'
 
 export const decrypt = (
     privateKey: Buffer,
