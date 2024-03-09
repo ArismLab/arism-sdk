@@ -5,9 +5,22 @@ import {
     lagrangeInterpolation,
 } from '@libs/arithmetic'
 import { BN, H, C, N } from '@common'
-import * as T from '@types'
+import type {
+    CommitmentRequest,
+    CommitmentResponse,
+    GetAddressRequest,
+    GetAddressResponse,
+    GetPrivateKeyRequest,
+    GetPrivateKeyResponse,
+    Node,
+    Point,
+    Response,
+    Error,
+    SecretRequest,
+    SecretResponse,
+} from '@types'
 
-const NODES: T.Node[] = [
+const NODES: Node[] = [
     {
         id: 1,
         url: 'http://127.0.0.1:3001',
@@ -39,8 +52,8 @@ const ping = async (url: string) => {
     return response?.data === 'pong!'
 }
 
-const fetchNodes = async (): Promise<T.Node[]> => {
-    const nodes: T.Node[] = []
+const fetchNodes = async (): Promise<Node[]> => {
+    const nodes: Node[] = []
 
     for (let i = 0; i < NODES.length; i += 1) {
         await ping(NODES[i].url).then((alive) => {
@@ -56,16 +69,16 @@ const fetchNodes = async (): Promise<T.Node[]> => {
 }
 
 export const getAddress = async (
-    input: T.GetAddressRequest
-): Promise<T.Response<T.GetAddressResponse>> => {
-    let error: T.Error | undefined
+    input: GetAddressRequest
+): Promise<Response<GetAddressResponse>> => {
+    let error: Error | undefined
 
     const nodes = await fetchNodes()
 
     for (const { url } of nodes) {
         try {
             const { owner } = input
-            const { data } = await axios.post<T.GetAddressResponse>(
+            const { data } = await axios.post<GetAddressResponse>(
                 `${url}/wallet`,
                 { owner }
             )
@@ -80,9 +93,10 @@ export const getAddress = async (
     return { data: undefined, error }
 }
 
-export const constructPrivateKey = async (
-    { idToken, owner }: T.GetPrivateKeyRequest,
-): Promise<T.Response<T.GetPrivateKeyResponse>> => {
+export const constructPrivateKey = async ({
+    idToken,
+    owner,
+}: GetPrivateKeyRequest): Promise<Response<GetPrivateKeyResponse>> => {
     await getAddress({ owner })
 
     const tempPrivateKey = C.generatePrivateKey()
@@ -90,15 +104,17 @@ export const constructPrivateKey = async (
     const tempCommitment = H.keccak256(idToken)
 
     const nodes = await fetchNodes()
-    const commitments: T.CommitmentResponse[] = []
+    const commitments: CommitmentResponse[] = []
 
     for (const { url } of nodes) {
         try {
-            const { data: commitment } =
-                await axios.post<T.CommitmentResponse>(`${url}/commitment`, {
+            const { data: commitment } = await axios.post<CommitmentResponse>(
+                `${url}/commitment`,
+                {
                     commitment: tempCommitment,
                     tempPublicKey,
-                } as T.CommitmentRequest)
+                } as CommitmentRequest
+            )
             commitments.push(commitment)
         } catch {}
     }
@@ -113,19 +129,18 @@ export const constructPrivateKey = async (
         }
     }
 
-    const encryptedMasterShares: { value: T.SecretResponse; id: number }[] =
-        []
+    const encryptedMasterShares: { value: SecretResponse; id: number }[] = []
 
     for (const { url, id } of nodes) {
         try {
-            const { data: value } = await axios.post<T.SecretResponse>(
+            const { data: value } = await axios.post<SecretResponse>(
                 `${url}/secret`,
                 {
                     commitments,
                     owner,
                     idToken,
                     tempPublicKey,
-                } as T.SecretRequest
+                } as SecretRequest
             )
             encryptedMasterShares.push({ value, id })
         } catch {}
@@ -163,7 +178,7 @@ export const constructPrivateKey = async (
         decryptedMasterShares.push(decryptedMasterShare)
     }
 
-    const masterShares: T.Point[] = decryptedMasterShares.reduce(
+    const masterShares: Point[] = decryptedMasterShares.reduce(
         (acc, curr, index) => {
             if (curr)
                 acc.push({
@@ -172,7 +187,7 @@ export const constructPrivateKey = async (
                 })
             return acc
         },
-        [] as T.Point[]
+        [] as Point[]
     )
 
     let privateKey: BN | undefined = undefined
